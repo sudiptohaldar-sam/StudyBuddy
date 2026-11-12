@@ -22,7 +22,11 @@ def get_embeddings():
 
 @st.cache_resource
 def get_llm():
-    return ChatGroq(model="openai/gpt-oss-20b", api_key=st.secrets["GROQ_API_KEY"])
+    try:
+        key = st.secrets["GROQ_API_KEY"]   # Streamlit Cloud
+    except Exception:
+        key = os.getenv("GROQ_API_KEY")    # local .env file
+    return ChatGroq(model="openai/gpt-oss-20b", api_key=key)
 
 
 def build_retriever(pdf_bytes: bytes):
